@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Movie Matcher – Room</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Swiper slider -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="logo">🎬 Movie Matcher</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="room-layout">
+    <section class="prefs card">
+      <h2>Tell us what you like</h2>
+      <form id="prefForm">
+        <label>Genre
+          <select name="genre">
+            <option value="action">Action</option>
+            <option value="comedy">Comedy</option>
+            <option value="drama">Drama</option>
+          </select>
+        </label>
+        <label>Language
+          <select name="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="es">Spanish</option>
+          </select>
+        </label>
+        <label>Max Runtime (minutes)
+          <input name="max_runtime" type="number" value="140" />
+        </label>
+        <label>Min Rating (0–10)
+          <input name="min_rating" type="number" step="0.1" value="7.0" />
+        </label>
+        <button type="submit">Save Preferences</button>
+      </form>
+
+      <canvas id="genreChart" width="300" height="300"></canvas>
+    </section>
+
+    <section class="results card">
+      <div class="room-code">
+        Room code: <span id="roomCodeText"></span>
+      </div>
+
+      <button id="matchBtn">Find Movies</button>
+
+      <!-- Swiper slider for movie matches -->
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper" id="moviesContainer">
+          <!-- slides filled by JS -->
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- JS libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/room.js"></script>
+</body>
+</html>
