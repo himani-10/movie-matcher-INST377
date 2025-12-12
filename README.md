@@ -2,7 +2,7 @@
 
 Collaborative movie picking for groups. Create a room, collect everyone's genre/language/runtime/rating preferences, and fetch consensus-friendly movies with trailers, cast, and where-to-watch info.
 
-## Project Overview (Top Half)
+## Project Overview 
 - **Description:** Front-end uses Fetch API to create/join rooms, save preferences, and request matched movies. TMDb (discover, details, credits, videos) plus Watchmode (streaming sources) power the recommendations.
 - **Target browsers:** Chrome, Firefox, Edge, Safari (last two desktop versions); Safari on iOS 16+ and Chrome on Android 12+ with responsive layouts under 960px.
 - **Libraries:** Chart.js (preference visualization) and Swiper (movie carousel). Vanilla HTML/CSS/JS everywhere else.
@@ -12,7 +12,7 @@ Collaborative movie picking for groups. Create a room, collect everyone's genre/
 
 ---
 
-## Developer Manual (Bottom Half)
+## Developer Manual 
 
 ### Prerequisites
 - Node.js 18+ and npm
