@@ -184,23 +184,30 @@ async function fetchWatchmodeSources(tmdbId) {
   if (!WATCHMODE_API_KEY) return [];
 
   try {
-    const searchUrl = `https://api.watchmode.com/v1/search/?apiKey=${WATCHMODE_API_KEY}&search_field=tmdb_id&search_value=${tmdbId}&types=movie`;
+    const searchUrl = `https://api.watchmode.com/v1/search/?apiKey=${WATCHMODE_API_KEY}&search_field=tmdb_movie_id&search_value=${tmdbId}&types=movie`;
     const searchRes = await fetch(searchUrl);
-    if (!searchRes.ok) throw new Error('Watchmode search failed');
+    if (!searchRes.ok) {
+      const errorText = await searchRes.text();
+      console.error('Watchmode search failed:', searchRes.status, errorText);
+      return [];
+    }
     const searchData = await searchRes.json();
     const wmId = searchData?.title_results?.[0]?.id;
     if (!wmId) return [];
 
     const srcUrl = `https://api.watchmode.com/v1/title/${wmId}/sources/?apiKey=${WATCHMODE_API_KEY}`;
     const srcRes = await fetch(srcUrl);
-    if (!srcRes.ok) throw new Error('Watchmode sources failed');
+    if (!srcRes.ok) {
+      console.error('Watchmode sources failed:', srcRes.status);
+      return [];
+    }
     const sources = await srcRes.json();
     const names = sources
       .filter((s) => ['sub', 'free', 'rent', 'buy'].includes(s.type))
       .map((s) => s.name);
     return [...new Set(names)].slice(0, 5);
   } catch (err) {
-    console.error('Watchmode error:', err.message);
+    // Silently fail - Watchmode is optional, don't spam console
     return [];
   }
 }
@@ -237,9 +244,19 @@ app.get('/api/room', async (req, res) => {
   if (!code) return res.status(400).json({ error: 'roomCode required' });
   if (!supabase) return res.status(500).json({ error: 'Supabase not configured' });
 
-  const { data, error } = await supabase.from('rooms').select('*').eq('code', code).single();
-  if (error || !data) return res.status(404).json({ error: 'Room not found' });
-  return res.json({ room: data });
+  const { data: room, error: roomErr } = await supabase.from('rooms').select('*').eq('code', code).single();
+  if (roomErr || !room) return res.status(404).json({ error: 'Room not found' });
+
+  // Get preference count for this room
+  const { count, error: countErr } = await supabase
+    .from('preferences')
+    .select('*', { count: 'exact', head: true })
+    .eq('room_id', room.id);
+
+  return res.json({ 
+    room: room,
+    preferenceCount: countErr ? 0 : count 
+  });
 });
 
 app.post('/api/savePreferences', async (req, res) => {
@@ -296,6 +313,7 @@ app.get('/api/match', async (req, res) => {
     if (prefErr) throw prefErr;
 
     const filters = aggregatePreferences(prefs);
+    const preferenceCount = prefs ? prefs.length : 0;
     const discovered = await fetchDiscoverMovies(filters);
 
     const detailed = await Promise.all(
@@ -321,9 +339,9 @@ app.get('/api/match', async (req, res) => {
     );
 
     const movies = detailed.filter(Boolean);
-    if (movies.length === 0) return res.json({ movies: FALLBACK_MOVIES });
+    if (movies.length === 0) return res.json({ movies: FALLBACK_MOVIES, preferenceCount });
 
-    return res.json({ movies });
+    return res.json({ movies, preferenceCount });
   } catch (err) {
     console.error('Match error:', err.message);
     return res.json({ movies: FALLBACK_MOVIES });

@@ -3,7 +3,9 @@ const roomCode = (params.get('roomCode') || '').toUpperCase();
 const roomCodeText = document.getElementById('roomCodeText');
 const roomCodeEchoes = document.querySelectorAll('.roomCodeEcho');
 const matchBtn = document.getElementById('matchBtn');
+const submitPrefsBtn = document.getElementById('submitPrefsBtn');
 const prefForm = document.getElementById('prefForm');
+const preferenceCountEl = document.getElementById('preferenceCount');
 
 function setRoomCode(code) {
   const display = code || 'N/A';
@@ -13,57 +15,51 @@ function setRoomCode(code) {
 
 setRoomCode(roomCode);
 
-if (!roomCode && matchBtn) {
-  matchBtn.disabled = true;
-  matchBtn.textContent = 'Enter via a room link';
+if (!roomCode) {
+  if (matchBtn) {
+    matchBtn.disabled = true;
+    matchBtn.textContent = 'Enter via a room link';
+  }
+  if (submitPrefsBtn) {
+    submitPrefsBtn.disabled = true;
+  }
 }
 
-// Basic genre counts for Chart.js
-const genreCounts = { action: 0, comedy: 0, drama: 0 };
-let genreChart;
-
-// Initialize chart
-function initChart() {
-  const ctx = document.getElementById('genreChart');
-  if (!ctx) return;
-  genreChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Action', 'Comedy', 'Drama'],
-      datasets: [{
-        data: [0, 0, 0],
-        backgroundColor: ['#fb923c', '#a855f7', '#38bdf8'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      plugins: {
-        legend: { position: 'bottom' },
-        tooltip: { enabled: true },
-      }
+// Fetch and update preference count
+async function updatePreferenceCount() {
+  if (!roomCode || roomCode === 'N/A') {
+    if (preferenceCountEl) {
+      preferenceCountEl.textContent = '0';
     }
-  });
+    return;
+  }
+  
+  try {
+    const res = await fetch(`/api/room?roomCode=${encodeURIComponent(roomCode)}`);
+    if (res.ok) {
+      const data = await res.json();
+      const count = data.preferenceCount !== undefined ? data.preferenceCount : 0;
+      if (preferenceCountEl) {
+        preferenceCountEl.textContent = count;
+      }
+    } else {
+      console.warn('Failed to fetch preference count:', res.status);
+    }
+  } catch (err) {
+    console.error('Error fetching preference count:', err);
+  }
 }
 
-function updateChart() {
-  if (!genreChart) return;
-  genreChart.data.datasets[0].data = [
-    genreCounts.action,
-    genreCounts.comedy,
-    genreCounts.drama,
-  ];
-  genreChart.update();
-}
-
-// Save preferences
-prefForm?.addEventListener('submit', async (e) => {
-  e.preventDefault();
+// Save preferences without matching
+async function savePreferences() {
   if (!roomCode) {
-    alert('Please join from the home page to get a room code before saving preferences.');
+    alert('Join or create a room first.');
     return;
   }
 
-  const formData = new FormData(e.target);
+  if (!prefForm) return;
+
+  const formData = new FormData(prefForm);
   const prefs = Object.fromEntries(formData.entries());
   prefs.roomCode = roomCode;
 
@@ -74,15 +70,39 @@ prefForm?.addEventListener('submit', async (e) => {
       body: JSON.stringify(prefs),
     });
 
-    if (!res.ok) throw new Error('Error saving preferences');
-
-    genreCounts[prefs.genre] = (genreCounts[prefs.genre] || 0) + 1;
-    updateChart();
+    if (res.ok) {
+      // Show success feedback
+      if (submitPrefsBtn) {
+        const originalText = submitPrefsBtn.textContent;
+        submitPrefsBtn.textContent = '✓ Saved!';
+        submitPrefsBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        setTimeout(() => {
+          submitPrefsBtn.textContent = originalText;
+          submitPrefsBtn.style.background = '';
+        }, 2000);
+      }
+      // Update preference count
+      await updatePreferenceCount();
+    } else {
+      throw new Error('Failed to save preferences');
+    }
   } catch (err) {
-    console.error(err);
-    alert('Error saving preferences. Double-check your room code or try again.');
+    console.error('Error saving preferences:', err);
+    alert('Error saving preferences. Please try again.');
   }
-});
+}
+
+// Submit preferences button
+submitPrefsBtn?.addEventListener('click', savePreferences);
+
+// Load preference count on page load (after a short delay to ensure roomCode is set)
+setTimeout(() => {
+  updatePreferenceCount();
+  // Refresh periodically every 3 seconds (more responsive)
+  setInterval(updatePreferenceCount, 3000);
+}, 500);
+
+// Preferences are saved when MATCH! button is clicked
 
 const fallbackMovies = [
   {
@@ -107,63 +127,122 @@ const fallbackMovies = [
   },
 ];
 
-// Match movies
+// Loading state management
+let isMatching = false;
+
+function setLoadingState(loading) {
+  isMatching = loading;
+  if (!matchBtn) return;
+  
+  if (loading) {
+    matchBtn.disabled = true;
+    matchBtn.innerHTML = '<span class="loader"></span> Finding Movies...';
+    matchBtn.classList.add('loading');
+  } else {
+    matchBtn.disabled = false;
+    matchBtn.innerHTML = 'MATCH!';
+    matchBtn.classList.remove('loading');
+  }
+}
+
+// Match movies - triggered by MATCH button
 matchBtn?.addEventListener('click', async () => {
   if (!roomCode) {
     alert('Join or create a room first so we can look up your group preferences.');
     return;
   }
 
+  // Prevent multiple simultaneous requests
+  if (isMatching) {
+    return;
+  }
+
+  setLoadingState(true);
+  showLoadingState();
+
   try {
+    // First save current form preferences (without showing the success message)
+    if (prefForm) {
+      const formData = new FormData(prefForm);
+      const prefs = Object.fromEntries(formData.entries());
+      prefs.roomCode = roomCode;
+
+      try {
+        await fetch('/api/savePreferences', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(prefs),
+        });
+        // Update count after saving
+        await updatePreferenceCount();
+      } catch (err) {
+        console.error('Error saving preferences:', err);
+      }
+    }
+
+    // Then fetch matches (which aggregates all preferences in the room)
     const res = await fetch(`/api/match?roomCode=${encodeURIComponent(roomCode)}`);
     if (!res.ok) throw new Error('Match request failed');
-    const { movies } = await res.json();
+    const data = await res.json();
+    const { movies, preferenceCount } = data;
+    
+    // Update preference count display from match response
+    if (preferenceCountEl && preferenceCount !== undefined) {
+      preferenceCountEl.textContent = preferenceCount;
+    }
+    
     renderMovies(movies);
   } catch (err) {
     console.error(err);
     renderMovies(fallbackMovies);
+  } finally {
+    setLoadingState(false);
   }
 });
 
-let swiper;
+function showLoadingState() {
+  const container = document.getElementById('moviesContainer');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Finding the perfect movies for your group...</p>
+    </div>
+  `;
+}
 
 function renderMovies(movies) {
   const container = document.getElementById('moviesContainer');
+  if (!container) return;
+  
   container.innerHTML = '';
 
   if (!movies || movies.length === 0) {
-    container.innerHTML = '<div class="swiper-slide"><div class="movie-card"><p>No matches yet. Try updating preferences and hit match again.</p></div></div>';
+    container.innerHTML = '<div class="movie-rec-card"><p>No matches yet. Make sure multiple people have submitted preferences, then hit MATCH!</p></div>';
     return;
   }
 
+  // Render as stacked cards (not swiper)
   movies.forEach(movie => {
-    const slide = document.createElement('div');
-    slide.className = 'swiper-slide';
-    slide.innerHTML = `
-      <div class="movie-card">
-        <img src="${movie.poster}" alt="${movie.title}">
+    const card = document.createElement('div');
+    card.className = 'movie-rec-card';
+    card.innerHTML = `
+      <img src="${movie.poster || ''}" alt="${movie.title}" onerror="this.style.display='none'">
+      <div class="movie-rec-content">
         <h3>${movie.title}</h3>
-        <p>${movie.overview}</p>
-        <p>⭐ ${movie.rating} | ${movie.runtime} min</p>
-        <p><strong>Cast:</strong> ${movie.cast.join(', ')}</p>
-        <p><strong>Watch on:</strong> ${movie.watch_on.join(', ')}</p>
-        <a href="${movie.trailer}" target="_blank">Watch Trailer</a>
+        <p>${movie.overview || 'No description available.'}</p>
+        <div class="movie-rec-meta">
+          <span>⭐ ${movie.rating || 'N/A'}</span>
+          <span>⏱ ${movie.runtime || 'N/A'} min</span>
+          ${movie.watch_on && movie.watch_on.length > 0 ? `<span>📺 ${movie.watch_on.join(', ')}</span>` : ''}
+        </div>
+        ${movie.cast && movie.cast.length > 0 ? `<p style="margin-top: 0.5rem; font-size: 0.85rem;"><strong>Cast:</strong> ${movie.cast.slice(0, 3).join(', ')}</p>` : ''}
+        ${movie.trailer ? `<a href="${movie.trailer}" target="_blank" style="display: inline-block; margin-top: 0.75rem; color: var(--accent-2);">Watch Trailer →</a>` : ''}
       </div>
     `;
-    container.appendChild(slide);
-  });
-
-  if (swiper) swiper.destroy(true, true);
-  swiper = new Swiper('.mySwiper', {
-    loop: false,
-    pagination: { el: '.swiper-pagination', clickable: true },
-    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-    slidesPerView: 1,
-    spaceBetween: 20,
-    breakpoints: {
-      900: { slidesPerView: 2 },
-    },
+    container.appendChild(card);
   });
 }
 
-initChart();
+// Removed initChart() - no longer needed
