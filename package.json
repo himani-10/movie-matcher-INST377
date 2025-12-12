@@ -1,0 +1,32 @@
+{
+  "name": "movie-matcher-inst377",
+  "version": "1.0.0",
+  "description": "Collaborative movie picking for groups. Create a room, collect everyone's genre/language/runtime/rating preferences, and fetch consensus-friendly movies with trailers, cast, and where-to-watch info.",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himani-10/movie-matcher-INST377.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/himani-10/movie-matcher-INST377/issues"
+  },
+  "homepage": "https://github.com/himani-10/movie-matcher-INST377#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "pg": "^8.16.3"
+  }
+}

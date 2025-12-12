@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Matcher – Room</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="style.css" />
   <!-- Swiper slider -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
@@ -13,12 +14,15 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
+      <a href="room.html">Room</a>
     </nav>
   </header>
 
   <main class="room-layout">
     <section class="prefs card">
+      <p class="eyebrow">Room <span id="roomCodeText">--</span></p>
       <h2>Tell us what you like</h2>
+      <p>Everyone in the room fills this out. We aggregate the filters before calling TMDb discovery so results stay fair.</p>
       <form id="prefForm">
         <label>Genre
           <select name="genre">
@@ -47,9 +51,9 @@
     </section>
 
     <section class="results card">
-      <div class="room-code">
-        Room code: <span id="roomCodeText"></span>
-      </div>
+      <p class="eyebrow">Matches</p>
+      <div class="room-code">Share this room: <strong class="roomCodeEcho">--</strong></div>
+      <p>Click match to fetch candidates (TMDb discovery + details, Watchmode sources) for this room's combined preferences.</p>
 
       <button id="matchBtn">Find Movies</button>
 
@@ -68,6 +72,6 @@
   <!-- JS libraries -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/room.js"></script>
+  <script src="room.js"></script>
 </body>
 </html>

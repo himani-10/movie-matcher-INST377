@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Matcher – About</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="logo">🎬 Movie Matcher</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="room.html">Room</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Why we built it</p>
+      <h1>Movie Matcher</h1>
+      <p>Picking a movie in a group is slow and often unfair. Movie Matcher collects everyone's preferences, blends them into a shared filter set, and returns a shortlist with trailers, cast, ratings, and where to watch.</p>
+    </section>
+
+    <div class="section-title">
+      <h2>How it works</h2>
+    </div>
+    <section class="feature-grid">
+      <article class="feature">
+        <h3>1. Create or join a room</h3>
+        <p>Generate a room code or join an existing one so every participant can submit preferences.</p>
+      </article>
+      <article class="feature">
+        <h3>2. Capture preferences</h3>
+        <p>Genre, language, runtime, and rating inputs are saved to the backend for aggregation per room.</p>
+      </article>
+      <article class="feature">
+        <h3>3. Blend and match</h3>
+        <p>Call TMDb discovery APIs using the combined filters to surface fair, consensus-ready results.</p>
+      </article>
+      <article class="feature">
+        <h3>4. Show what to watch</h3>
+        <p>Pull Watchmode streaming sources so every suggested title lists where to hit play.</p>
+      </article>
+    </section>
+
+    <div class="section-title">
+      <h2>APIs & data</h2>
+    </div>
+    <section class="card feature-grid">
+      <article class="feature">
+        <h3>TMDb</h3>
+        <p>Discover movies by genre and language, then fetch details including runtime, vote average, cast, and trailers.</p>
+        <small>Endpoints: Discover, Movie Details, Videos, Credits.</small>
+      </article>
+      <article class="feature">
+        <h3>Watchmode</h3>
+        <p>Find streaming sources per title so groups only see suggestions that are playable on their platforms.</p>
+        <small>Endpoints: Title search + streaming sources.</small>
+      </article>
+      <article class="feature">
+        <h3>Supabase</h3>
+        <p>Planned database for storing rooms, members, preference submissions, and votes to keep results fair.</p>
+        <small>Tables: rooms, members, preferences, matches, votes.</small>
+      </article>
+    </section>
+
+    <div class="section-title">
+      <h2>Target browsers</h2>
+    </div>
+    <section class="feature-grid">
+      <article class="feature">
+        <h3>Desktop</h3>
+        <p>Recent Chrome, Firefox, Edge, and Safari (last two versions) at 1280px+.</p>
+      </article>
+      <article class="feature">
+        <h3>Mobile</h3>
+        <p>Safari on iOS 16+, Chrome on Android 12+ with responsive layouts under 960px.</p>
+      </article>
+      <article class="feature">
+        <h3>Performance goals</h3>
+        <p>Lean assets, CDN-loaded libraries, and static rendering to keep first paint quick on campus Wi-Fi.</p>
+      </article>
+    </section>
+  </main>
+
+  <div class="footer">
+    Built for INST377 – Himani Majithia & Lakshya Sajal Kumar.
+  </div>
+</body>
+</html>

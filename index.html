@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Matcher</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,24 +12,80 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="room.html">Room</a> 
+      <a href="room.html">Room</a>
     </nav>
   </header>
 
-  <main class="hero">
-    <section class="card">
-      <h1>Find a movie everyone loves</h1>
-      <p>Create a room, share the code, and get fair movie picks for the whole group.</p>
-      <div class="actions">
-        <button id="createRoomBtn">Create Room</button>
-        <div class="join">
-          <input id="joinCodeInput" placeholder="Enter room code" maxlength="6" />
-          <button id="joinRoomBtn">Join Room</button>
+  <main>
+    <section class="hero">
+      <section class="card">
+        <p class="eyebrow">Group movie nights</p>
+        <h1>Find a movie everyone loves</h1>
+        <p>Create a room, share a short join code, and blend everyone's genre, runtime, language, and rating preferences before recommending fair movie picks.</p>
+        <div class="actions">
+          <button id="createRoomBtn">Create Room</button>
+          <div class="join">
+            <input id="joinCodeInput" placeholder="Enter room code" maxlength="6" />
+            <button id="joinRoomBtn">Join Room</button>
+          </div>
         </div>
-      </div>
+        <div class="pill-row">
+          <span class="pill">3+ Fetch API calls</span>
+          <span class="pill">Chart.js + Swiper</span>
+          <span class="pill">Supabase-ready backend</span>
+        </div>
+      </section>
+
+      <section class="card hero-preview">
+        <div>
+          <p class="eyebrow">API pipeline</p>
+          <h2>TMDb + Watchmode</h2>
+          <p>Discover movies by shared filters, show trailers, cast, and where to watch. Preferences save per room so everyone gets a vote.</p>
+        </div>
+        <div class="progress">
+          <div class="stat">
+            <strong>TMDb</strong>
+            <p>Discover movies, details, trailers, and cast per group preference set.</p>
+          </div>
+          <div class="stat">
+            <strong>Watchmode</strong>
+            <p>Surface streaming availability so groups pick movies they can actually play.</p>
+          </div>
+        </div>
+        <div class="pill-row">
+          <span class="pill">Room-specific filters</span>
+          <span class="pill">Match button for group picks</span>
+        </div>
+      </section>
+    </section>
+
+    <div class="section-title">
+      <h2>What you can do</h2>
+    </div>
+    <section class="feature-grid">
+      <article class="feature">
+        <h3>Create rooms</h3>
+        <p>Spin up a session, hand friends the join code, and collect preferences with fetch-driven endpoints.</p>
+      </article>
+      <article class="feature">
+        <h3>Save preferences</h3>
+        <p>Genre, language, runtime, and rating inputs save via POST so charts and matches reflect the whole crew.</p>
+      </article>
+      <article class="feature">
+        <h3>Match movies</h3>
+        <p>Use TMDb discovery plus Watchmode streaming sources to suggest titles, trailers, cast, and where to watch.</p>
+      </article>
+      <article class="feature">
+        <h3>Room view</h3>
+        <p>Chart.js visualizes top genres while Swiper shows each candidate movie in a slick slider.</p>
+      </article>
     </section>
   </main>
 
-  <script src="js/home.js"></script>
+  <div class="footer">
+    Built for INST377 – Himani Majithia & Lakshya Sajal Kumar. Deployed to Vercel-ready static frontend.
+  </div>
+
+  <script src="home.js"></script>
 </body>
 </html>
