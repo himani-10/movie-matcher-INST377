@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--Header Comments -->
-  <meta charset="UTF-8">
-  <title>About | Movie Matcher</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Matcher – About</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <header class="nav">
+    <div class="logo">🎬 Movie Matcher</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="room.html">Room</a>
+    </nav>
+  </header>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <h1 class="logo">Movie Matcher</h1>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html" class="active">About</a></li>
-    </ul>
-  </nav>
+  <main>
+    <section class="about-page">
+      <h1 class="about-title">ABOUT PAGE</h1>
+      
+      <section class="about-section">
+        <h2>Problem Statement</h2>
+        <p>Picking a movie in a group is slow and often unfair. Movie Matcher collects everyone's preferences, blends them into a shared filter set, and returns a shortlist with trailers, cast, ratings, and where to watch.</p>
+      </section>
 
-  <!-- About Page Content -->
-  <main class="about-container">
+      <section class="about-section">
+        <h2>HOW it works</h2>
+        <ol>
+          <li>Create or join a room - Generate a room code or join an existing one so every participant can submit preferences.</li>
+          <li>Capture preferences - Genre, language, runtime, and rating inputs are saved to the backend for aggregation per room.</li>
+          <li>Blend and match - Call TMDb discovery APIs using the combined filters to surface fair, consensus-ready results.</li>
+          <li>Show what to watch - Pull Watchmode streaming sources so every suggested title lists where to hit play.</li>
+        </ol>
+      </section>
 
-    <!-- Problem Summary -->
-    <section class="about-section">
-      <h2>Problem Summary</h2>
-      <p>
-        Choosing a movie is often difficult due to the overwhelming number of options, conflicting preferences within groups, and general indecision. Whether it is a student organization planning a screening or a group of friends deciding on a movie night, people want a quick and fair way to narrow choices down to a few high quality options everyone can agree on.
-      </p>
+      <section class="about-section">
+        <h2>APIs used</h2>
+        <div class="api-list">
+          <div class="api-item">
+            <h3>TMDb</h3>
+            <p>Discover movies by genre and language, then fetch details including runtime, vote average, cast, and trailers.</p>
+            <small>Endpoints: Discover, Movie Details, Videos, Credits.</small>
+          </div>
+          <div class="api-item">
+            <h3>Watchmode</h3>
+            <p>Find streaming sources per title so groups only see suggestions that are playable on their platforms.</p>
+            <small>Endpoints: Title search + streaming sources.</small>
+          </div>
+          <div class="api-item">
+            <h3>Supabase</h3>
+            <p>Database for storing rooms, members, preference submissions, and votes to keep results fair.</p>
+            <small>Tables: rooms, members, preferences, matches, votes.</small>
+          </div>
+        </div>
+      </section>
     </section>
-
-    <!-- How Movie Matcher Works -->
-    <section class="about-section">
-      <h2>How Movie Matcher Works</h2>
-      <p>
-        Movie Matcher allows multiple users to input their genre and language preferences. Based on these combined inputs, the system recommends a small set of movies that best match the group’s shared interests. Each recommendation includes a trailer, a brief synopsis, cast information, ratings, and details on where the movie can be streamed.
-      </p>
-    </section>
-
-    <!-- APIs Used -->
-    <section class="about-section">
-      <h2>APIs Used</h2>
-      <p>
-        Movie Matcher uses the TMDb API to retrieve movies that match selected genres and languages. This API provides detailed movie metadata such as synopses, ratings, cast information, and trailers. To show users where each movie can be watched, the Watchmode API is used to identify available streaming platforms.
-      </p>
-    </section>
-
   </main>
 
+  <div class="footer">
+    Built for INST377 – Himani Majithia & Lakshya Sajal Kumar.
+  </div>
 </body>
 </html>

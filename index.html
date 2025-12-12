@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Matcher</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,24 +12,28 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="room.html">Room</a> 
+      <a href="room.html">Room</a>
     </nav>
   </header>
 
-  <main class="hero">
-    <section class="card">
-      <h1>Find a movie everyone loves</h1>
-      <p>Create a room, share the code, and get fair movie picks for the whole group.</p>
-      <div class="actions">
-        <button id="createRoomBtn">Create Room</button>
-        <div class="join">
-          <input id="joinCodeInput" placeholder="Enter room code" maxlength="6" />
-          <button id="joinRoomBtn">Join Room</button>
-        </div>
+  <main>
+    <section class="home-hero">
+      <h1 class="home-title">Movie Matcher</h1>
+      <div class="home-actions">
+        <button id="createRoomBtn" class="oval-btn">CREATE A ROOM</button>
+        <button id="joinRoomBtn" class="oval-btn">JOIN A ROOM</button>
+      </div>
+      <div id="joinRoomInput" class="join-input" style="display: none;">
+        <input id="joinCodeInput" placeholder="Enter room code" maxlength="6" />
+        <button id="joinSubmitBtn">Join</button>
       </div>
     </section>
   </main>
 
-  <script src="js/home.js"></script>
+  <div class="footer">
+    Built for INST377 – Himani Majithia & Lakshya Sajal Kumar. Deployed to Vercel-ready static frontend.
+  </div>
+
+  <script src="home.js"></script>
 </body>
 </html>

@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Matcher – Room</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <!-- Swiper slider -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="nav">
@@ -13,61 +12,49 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
+      <a href="room.html">Room</a>
     </nav>
   </header>
 
   <main class="room-layout">
-    <section class="prefs card">
-      <h2>Tell us what you like</h2>
-      <form id="prefForm">
-        <label>Genre
-          <select name="genre">
+    <section class="prefs-column">
+      <h2 class="pref-title">PREF FORM</h2>
+      <p class="pref-instructions">Each person should submit their own preferences. We'll combine everyone's choices!</p>
+      <form id="prefForm" class="pref-form">
+        <label>
+          <span>genre :</span>
+          <select name="genre" class="oval-input">
             <option value="action">Action</option>
             <option value="comedy">Comedy</option>
             <option value="drama">Drama</option>
           </select>
         </label>
-        <label>Language
-          <select name="language">
+        <label>
+          <span>language :</span>
+          <select name="language" class="oval-input">
             <option value="en">English</option>
             <option value="hi">Hindi</option>
             <option value="es">Spanish</option>
           </select>
         </label>
-        <label>Max Runtime (minutes)
-          <input name="max_runtime" type="number" value="140" />
-        </label>
-        <label>Min Rating (0–10)
-          <input name="min_rating" type="number" step="0.1" value="7.0" />
-        </label>
-        <button type="submit">Save Preferences</button>
+        <button type="button" id="submitPrefsBtn" class="submit-prefs-btn">Submit My Preferences</button>
+        <button type="button" id="matchBtn" class="match-btn">MATCH!</button>
       </form>
-
-      <canvas id="genreChart" width="300" height="300"></canvas>
+      <div class="room-stats">
+        <p class="room-code-display">Room: <span id="roomCodeText">--</span></p>
+        <p class="preference-count">👥 <span id="preferenceCount">0</span> people have submitted preferences</p>
+      </div>
     </section>
 
-    <section class="results card">
-      <div class="room-code">
-        Room code: <span id="roomCodeText"></span>
-      </div>
-
-      <button id="matchBtn">Find Movies</button>
-
-      <!-- Swiper slider for movie matches -->
-      <div class="swiper mySwiper">
-        <div class="swiper-wrapper" id="moviesContainer">
-          <!-- slides filled by JS -->
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
+    <section class="results-column">
+      <h2 class="results-title">Movies Recs.</h2>
+      <div id="moviesContainer" class="movies-list">
+        <!-- Movie recommendation cards will be inserted here -->
       </div>
     </section>
   </main>
 
   <!-- JS libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/room.js"></script>
+  <script src="room.js"></script>
 </body>
 </html>
